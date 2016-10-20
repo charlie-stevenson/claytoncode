@@ -5,7 +5,7 @@ global void execute(SchedulableContext sc) {
      setNewIssueStatuses();
   }
 
-public static void ClearAllIssueStatuses() {
+public static void clearAllIssueStatuses() {
  list<issue__c> allCurrentIssues = [select id from issue__c where issue_status__c != ''];
 
  for (issue__c thisIssue : allCurrentIssues) {
@@ -15,7 +15,7 @@ try{ update allCurrentIssues;}
      catch(exception e){system.debug(e);}
 }
 
-public static void SetNewIssueStatuses() {
+public static void setNewIssueStatuses() {
 
 Set<string> pubNames = new Set<string>();
 
@@ -66,7 +66,7 @@ try{update lastTwoPubOldIssues;}
 }
 }
 
-public static testMethod void TestClearAllCurrentIssues() {
+public static testMethod void testClearAllCurrentIssues() {
 
 Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
@@ -102,7 +102,7 @@ system.assertequals(0,currentIssues.size());
 
 }
 
-public static testMethod void TestSetNewIssueStatuses() {
+public static testMethod void testSetNewIssueStatuses() {
 
 Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
