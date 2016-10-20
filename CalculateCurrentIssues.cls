@@ -1,11 +1,11 @@
-Global class calculateCurrentIssues implements Schedulable{
+Global with sharing class CalculateCurrentIssues implements Schedulable{
 
 global void execute(SchedulableContext sc) {
      clearAllIssueStatuses();
      setNewIssueStatuses();
   }
 
-public static void clearAllIssueStatuses() {
+public static void ClearAllIssueStatuses() {
  list<issue__c> allCurrentIssues = [select id from issue__c where issue_status__c != ''];
 
  for (issue__c thisIssue : allCurrentIssues) {
@@ -15,7 +15,7 @@ try{ update allCurrentIssues;}
      catch(exception e){system.debug(e);}
 }
 
-public static void setNewIssueStatuses() {
+public static void SetNewIssueStatuses() {
 
 Set<string> pubNames = new Set<string>();
 
@@ -66,7 +66,7 @@ try{update last2PubOldIssues;}
 }
 }
 
-public static testMethod void testClearAllCurrentIssues() {
+public static testMethod void TestClearAllCurrentIssues() {
 
 Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
@@ -94,7 +94,7 @@ Issue__c testNewIssue = new Issue__c
          try{insert testNewIssue;}
      catch(exception e){system.debug(e);}
 
-calculateCurrentIssues.clearAllIssueStatuses();
+CalculateCurrentIssues.ClearAllIssueStatuses();
 
 list<issue__c> currentIssues = [select id from issue__c where issue_status__c != ''];
 system.debug(currentIssues.size());
@@ -102,7 +102,7 @@ system.assertequals(0,currentIssues.size());
 
 }
 
-public static testMethod void testSetNewIssueStatuses() {
+public static testMethod void TestSetNewIssueStatuses() {
 
 Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
@@ -143,7 +143,7 @@ Issue__c testNextIssue = new Issue__c
          try{insert testNextIssue;}
      catch(exception e){system.debug(e);}
 
-calculateCurrentIssues.setNewIssueStatuses();
+CalculateCurrentIssues.SetNewIssueStatuses();
 
 list<issue__c> currentIssues = [select id from issue__c where issue_status__c != ''];
 system.debug(currentIssues.size());
