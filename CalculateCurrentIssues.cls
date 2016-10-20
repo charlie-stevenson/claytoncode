@@ -11,7 +11,8 @@ public static void clearAllIssueStatuses() {
  for (issue__c thisIssue : allCurrentIssues) {
      thisIssue.issue_Status__c  = '';
      }
- update allCurrentIssues;
+try{ update allCurrentIssues;}
+     catch(exception e){system.debug(e);}
 }
 
 public static void setNewIssueStatuses() {
@@ -48,7 +49,8 @@ for (string thisPub : pubNames ) {
  if (allPubNewIssues.size()>12) {allPubNewIssues[11].issue_status__c = 'Next+10';}
  if (allPubNewIssues.size()>13) {allPubNewIssues[12].issue_status__c = 'Next+11';}
  
- update allPubNewIssues;
+try{update allPubNewIssues;}
+     catch(exception e){system.debug(e);}
 
  list<issue__c> last2PubOldIssues = [select id
                                  from issue__c
@@ -59,7 +61,8 @@ for (string thisPub : pubNames ) {
 
     if(last2PubOldIssues.size()>=1) {last2PubOldIssues[0].issue_status__c = 'Previous';}
     if(last2PubOldIssues.size()>=2) {last2PubOldIssues[1].issue_status__c = 'Previous-1';}
-update last2PubOldIssues;
+try{update last2PubOldIssues;}
+     catch(exception e){system.debug(e);}
 }
 }
 
@@ -75,7 +78,8 @@ Issue__c testOldIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.valueof('2000-01-01')
          );
-         insert testOldIssue;
+         try{insert testOldIssue;}
+     catch(exception e){system.debug(e);}
 
 Issue__c testNewIssue = new Issue__c
         (Name                    = 'test two',
@@ -87,7 +91,8 @@ Issue__c testNewIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(2)
          );
-         insert testNewIssue;
+         try{insert testNewIssue;}
+     catch(exception e){system.debug(e);}
 
 calculateCurrentIssues.clearAllIssueStatuses();
 
@@ -109,7 +114,8 @@ Issue__c testOldIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.valueof('2000-01-01')
          );
-         insert testOldIssue;
+         try{insert testOldIssue;}
+     catch(exception e){system.debug(e);}
 
 Issue__c testNewIssue = new Issue__c
         (Name                    = 'test two',
@@ -121,7 +127,8 @@ Issue__c testNewIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(2)
          );
-         insert testNewIssue;
+         try{insert testNewIssue;}
+     catch(exception e){system.debug(e);}
 
 Issue__c testNextIssue = new Issue__c
         (Name                    = 'test three',
@@ -133,7 +140,8 @@ Issue__c testNextIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(32)
          );
-         insert testNextIssue;
+         try{insert testNextIssue;}
+     catch(exception e){system.debug(e);}
 
 calculateCurrentIssues.setNewIssueStatuses();
 
