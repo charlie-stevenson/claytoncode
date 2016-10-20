@@ -27,7 +27,7 @@ for (AggregateResult pubList : findPublications) {
 
 system.debug(pubNames);
 
-for (string thisPub : pubNames ) {
+for (string thisPub : pubNames) {
 
  list<issue__c> allPubNewIssues = [select id
                                  from issue__c
