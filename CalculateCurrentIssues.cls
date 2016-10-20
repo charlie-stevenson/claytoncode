@@ -52,16 +52,16 @@ for (string thisPub : pubNames) {
 try{update allPubNewIssues;}
      catch(exception e){system.debug(e);}
 
- list<issue__c> last2PubOldIssues = [select id
+ list<issue__c> lastTwoPubOldIssues = [select id
                                  from issue__c
                                  where publication_name__c = :thisPub
                                  and deadline__c < :date.today()
                                  order by deadline__c desc
                                  limit 2];
 
-    if(last2PubOldIssues.size()>=1) {last2PubOldIssues[0].issue_status__c = 'Previous';}
-    if(last2PubOldIssues.size()>=2) {last2PubOldIssues[1].issue_status__c = 'Previous-1';}
-try{update last2PubOldIssues;}
+    if(lastTwoPubOldIssues.size()>=1) {lastTwoPubOldIssues[0].issue_status__c = 'Previous';}
+    if(lastTwoPubOldIssues.size()>=2) {lastTwoPubOldIssues[1].issue_status__c = 'Previous-1';}
+try{update lastTwoPubOldIssues;}
      catch(exception e){system.debug(e);}
 }
 }
