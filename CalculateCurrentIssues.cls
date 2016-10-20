@@ -134,7 +134,7 @@ Issue__c TestNextIssue = new Issue__c
          deadline__c             = date.today().addDays(32)
          );
          insert TestNextIssue;
- 
+
 CalculateCurrentIssues.SetNewIssueStatuses();
 
 list<issue__c> current_issues = [select id from issue__c where issue_status__c != ''];
