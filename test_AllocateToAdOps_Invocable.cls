@@ -14,8 +14,8 @@ Opportunity newOpp = Test_setup_master_data.create();
 newOpp.SendingToAdOps__c = false;
     update newOpp;
 
-list<Opportunity> testOpp_l = [select id, processed_by_lookup__c from opportunity where id = :newOpp.id];
-system.assert(testOpp_l[0].Processed_by_lookup__c==null);
+list<Opportunity> testOppl = [select id, processed_by_lookup__c from opportunity where id = :newOpp.id];
+system.assert(testOppl[0].Processed_by_lookup__c==null);
     
 allocateToAdOpsInvocable.go(testOpp_l);
 
