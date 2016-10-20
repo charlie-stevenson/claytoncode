@@ -1,5 +1,5 @@
 /*Based on Salesforce source code, but ammended by Charles Stevenson Nov 2011
-to meet IDG's Opportunity model.
+to meet IDG's Opportunity model
 
 --------
 Copyright (c) 2011 salesforce.com, inc. All rights reserved.
