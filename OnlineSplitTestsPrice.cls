@@ -104,9 +104,5 @@ system.debug(LiCounter);
 
 system.assertEquals(2, resultOpportunityLineItem.size());
 
-// tidy up
-
-//delete opportunity
-
 }
 }
