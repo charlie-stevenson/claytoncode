@@ -1,71 +1,74 @@
-Global class CalculateCurrentIssues implements Schedulable{
+Global with sharing class CalculateCurrentIssues implements Schedulable{
 
-global void execute(SchedulableContext SC) {
-     ClearAllIssueStatuses();
-     SetNewIssueStatuses();
+global void execute(SchedulableContext sc) {
+     clearAllIssueStatuses();
+     setNewIssueStatuses();
   }
 
-public static void ClearAllIssueStatuses() {
- list<issue__c> all_current_issues = [select id from issue__c where issue_status__c != ''];
+public static void clearAllIssueStatuses() {
+ list<issue__c> allCurrentIssues = [select id from issue__c where issue_status__c != ''];
 
- for (issue__c this_issue : all_current_issues) {
-     this_issue.issue_Status__c  = '';
+ for (issue__c thisIssue : allCurrentIssues) {
+     thisIssue.issue_Status__c  = '';
      }
- update all_current_issues;
+try{ update allCurrentIssues;}
+     catch(exception e){system.debug(e);}
 }
 
-public static void SetNewIssueStatuses() {
+public static void setNewIssueStatuses() {
 
-Set<string> pub_names = new Set<string>();
+Set<string> pubNames = new Set<string>();
 
-list<AggregateResult> find_publications = [select publication_name__c from issue__c where deadline__c >= :date.today() group by publication_name__c];
+list<AggregateResult> findPublications = [select publication_name__c from issue__c where deadline__c >= :date.today() group by publication_name__c];
 
-for (AggregateResult pub_list : find_publications) {
- pub_names.add((string)pub_list.get('publication_name__c'));
+for (AggregateResult pubList : findPublications) {
+ pubNames.add((string)pubList.get('publication_name__c'));
 }
 
-system.debug(pub_names);
+system.debug(pubNames);
 
-for (string this_pub : pub_names ) {
+for (string thisPub : pubNames) {
 
- list<issue__c> all_pub_new_issues = [select id
+ list<issue__c> allPubNewIssues = [select id
                                  from issue__c
-                                 where publication_name__c = :this_pub
+                                 where publication_name__c = :thisPub
                                  and deadline__c >= :date.today()
                                  order by deadline__c];
 
- all_pub_new_issues[0].issue_status__c = 'Current';
- if (all_pub_new_issues.size()>1) {all_pub_new_issues[1].issue_status__c = 'Next';}
- if (all_pub_new_issues.size()>2) {all_pub_new_issues[2].issue_status__c = 'Next+1';}
- if (all_pub_new_issues.size()>3) {all_pub_new_issues[3].issue_status__c = 'Next+2';}
- if (all_pub_new_issues.size()>4) {all_pub_new_issues[4].issue_status__c = 'Next+3';}
- if (all_pub_new_issues.size()>5) {all_pub_new_issues[5].issue_status__c = 'Next+4';}
- if (all_pub_new_issues.size()>7) {all_pub_new_issues[6].issue_status__c = 'Next+5';}
- if (all_pub_new_issues.size()>8) {all_pub_new_issues[7].issue_status__c = 'Next+6';}
- if (all_pub_new_issues.size()>9) {all_pub_new_issues[8].issue_status__c = 'Next+7';}
- if (all_pub_new_issues.size()>10) {all_pub_new_issues[9].issue_status__c = 'Next+8';}
- if (all_pub_new_issues.size()>11) {all_pub_new_issues[10].issue_status__c = 'Next+9';}
- if (all_pub_new_issues.size()>12) {all_pub_new_issues[11].issue_status__c = 'Next+10';}
- if (all_pub_new_issues.size()>13) {all_pub_new_issues[12].issue_status__c = 'Next+11';}
+ allPubNewIssues[0].issue_status__c = 'Current';
+ if (allPubNewIssues.size()>1) {allPubNewIssues[1].issue_status__c = 'Next';}
+ if (allPubNewIssues.size()>2) {allPubNewIssues[2].issue_status__c = 'Next+1';}
+ if (allPubNewIssues.size()>3) {allPubNewIssues[3].issue_status__c = 'Next+2';}
+ if (allPubNewIssues.size()>4) {allPubNewIssues[4].issue_status__c = 'Next+3';}
+ if (allPubNewIssues.size()>5) {allPubNewIssues[5].issue_status__c = 'Next+4';}
+ if (allPubNewIssues.size()>7) {allPubNewIssues[6].issue_status__c = 'Next+5';}
+ if (allPubNewIssues.size()>8) {allPubNewIssues[7].issue_status__c = 'Next+6';}
+ if (allPubNewIssues.size()>9) {allPubNewIssues[8].issue_status__c = 'Next+7';}
+ if (allPubNewIssues.size()>10) {allPubNewIssues[9].issue_status__c = 'Next+8';}
+ if (allPubNewIssues.size()>11) {allPubNewIssues[10].issue_status__c = 'Next+9';}
+ if (allPubNewIssues.size()>12) {allPubNewIssues[11].issue_status__c = 'Next+10';}
+ if (allPubNewIssues.size()>13) {allPubNewIssues[12].issue_status__c = 'Next+11';}
  
- update all_pub_new_issues;
+try{update allPubNewIssues;}
+     catch(exception e){system.debug(e);}
 
- list<issue__c> last2_pub_old_issues = [select id
+ list<issue__c> lastTwoPubOldIssues = [select id
                                  from issue__c
-                                 where publication_name__c = :this_pub
+                                 where publication_name__c = :thisPub
                                  and deadline__c < :date.today()
                                  order by deadline__c desc
                                  limit 2];
 
-    if(last2_pub_old_issues.size()>=1) {last2_pub_old_issues[0].issue_status__c = 'Previous';}
-    if(last2_pub_old_issues.size()>=2) {last2_pub_old_issues[1].issue_status__c = 'Previous-1';}
-update last2_pub_old_issues;
+    if(lastTwoPubOldIssues.size()>=1) {lastTwoPubOldIssues[0].issue_status__c = 'Previous';}
+    if(lastTwoPubOldIssues.size()>=2) {lastTwoPubOldIssues[1].issue_status__c = 'Previous-1';}
+try{update lastTwoPubOldIssues;}
+     catch(exception e){system.debug(e);}
 }
 }
 
-public static testMethod void TestClearAllCurrentIssues() {
+public static testMethod void testClearAllCurrentIssues() {
 
-Issue__c TestOldIssue = new Issue__c
+Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
          Publication_name__c     = 'CIO',
          on_sale_date__c         = date.valueof('2000-01-01'),
@@ -75,9 +78,10 @@ Issue__c TestOldIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.valueof('2000-01-01')
          );
-         insert TestOldIssue;
+         try{insert testOldIssue;}
+     catch(exception e){system.debug(e);}
 
-Issue__c TestNewIssue = new Issue__c
+Issue__c testNewIssue = new Issue__c
         (Name                    = 'test two',
          Publication_name__c     = 'CIO',
          on_sale_date__c         = date.today().addDays(3),
@@ -87,19 +91,20 @@ Issue__c TestNewIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(2)
          );
-         insert TestNewIssue;
+         try{insert testNewIssue;}
+     catch(exception e){system.debug(e);}
 
 CalculateCurrentIssues.ClearAllIssueStatuses();
 
-list<issue__c> current_issues = [select id from issue__c where issue_status__c != ''];
-system.debug(current_issues.size());
-system.assertequals(0,current_issues.size());
+list<issue__c> currentIssues = [select id from issue__c where issue_status__c != ''];
+system.debug(currentIssues.size());
+system.assertequals(0,currentIssues.size());
 
 }
 
-public static testMethod void TestSetNewIssueStatuses() {
+public static testMethod void testSetNewIssueStatuses() {
 
-Issue__c TestOldIssue = new Issue__c
+Issue__c testOldIssue = new Issue__c
         (Name                    = 'test one',
          Publication_name__c     = 'CIO',
          on_sale_date__c         = date.valueof('2000-01-01'),
@@ -109,9 +114,10 @@ Issue__c TestOldIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.valueof('2000-01-01')
          );
-         insert TestOldIssue;
+         try{insert testOldIssue;}
+     catch(exception e){system.debug(e);}
 
-Issue__c TestNewIssue = new Issue__c
+Issue__c testNewIssue = new Issue__c
         (Name                    = 'test two',
          Publication_name__c     = 'CIO',
          on_sale_date__c         = date.today().addDays(3),
@@ -121,9 +127,10 @@ Issue__c TestNewIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(2)
          );
-         insert TestNewIssue;
+         try{insert testNewIssue;}
+     catch(exception e){system.debug(e);}
 
-Issue__c TestNextIssue = new Issue__c
+Issue__c testNextIssue = new Issue__c
         (Name                    = 'test three',
          Publication_name__c     = 'CIO',
          on_sale_date__c         = date.today().addDays(33),
@@ -133,12 +140,13 @@ Issue__c TestNextIssue = new Issue__c
          pricebook__c            = 'CIO (Online)',
          deadline__c             = date.today().addDays(32)
          );
-         insert TestNextIssue;
- 
+         try{insert testNextIssue;}
+     catch(exception e){system.debug(e);}
+
 CalculateCurrentIssues.SetNewIssueStatuses();
 
-list<issue__c> current_issues = [select id from issue__c where issue_status__c != ''];
-system.debug(current_issues.size());
-system.assertnotequals(0,current_issues.size());
+list<issue__c> currentIssues = [select id from issue__c where issue_status__c != ''];
+system.debug(currentIssues.size());
+system.assertnotequals(0,currentIssues.size());
 }
 }
