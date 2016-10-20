@@ -1,59 +1,58 @@
 @isTest (seeAllData=true)
 
-private class OnlineSplitTestsPrice {
+private with sharing class OnlineSplitTestsPrice {
 
-    static testMethod void TestOnlineSplitting() {
+    static testMethod void testOnlineSplitting() {
 
 //create opportunity
 
 //Test Account
-account testaccount = new Account
+account testAccount = new Account
         (Name = 'testaccount123478612345');
         
    insert testaccount;
         
-Opportunity TestOpportunity = new Opportunity
+Opportunity testOpportunity = new Opportunity
         (Name                = 'test name for apex testing',
          Account             = TestAccount,
          CloseDate           = System.today(),
          Agency_or_Direct__c = 'Direct to Client',
          StageName           = 'Needs Analysis');
          
-        insert TestOpportunity;
+        insert testOpportunity;
 
 // create products, pricebook
 
-
 // create Issue
-Issue__c newissue = new Issue__c
+Issue__c newIssue = new Issue__c
     (name = 'this is just a test issue 2395123y95',
         On_Sale_Date__c = Date.newInstance(2010,02,02),
         Issue_Year_Calendar__c = 2011,
         Issue_Year_Financial__c = 2011,
         Issue_Number__c = '32144');
-insert newissue;     
+insert newIssue;     
         
 // add products...
 
-    Pricebook2 testpricebook = new Pricebook2
+    Pricebook2 testPricebook = new Pricebook2
         (Name = 'Custom Pricebook',
          IsActive = true);
 
-    insert testpricebook;
+    insert testPricebook;
 
-    Product2 testproduct = new Product2
+    Product2 testProduct = new Product2
         (IsActive = true,
          Name = 'TestProduct',
          space__c = 1,
          family = 'Old'
          );
     
-    insert testproduct;
+    insert testProduct;
 
     Pricebook2 stdPb = [select Id from Pricebook2 where isStandard=true limit 1];
     insert new PricebookEntry(pricebook2id = stdPb.id, product2id = testproduct.id,unitprice=1.0, isActive=true);
 
-    pricebookentry testpbe = new PricebookEntry
+    pricebookentry testPbe = new PricebookEntry
         (Pricebook2ID = testpricebook.id,
          Product2ID = testproduct.id,
          IsActive = true,
@@ -61,13 +60,13 @@ insert newissue;
          UseStandardPrice = false
          );
     
-    insert testpbe;        
+    insert testPbe;        
         
         
-PricebookEntry  TestPricebookEntry = testpbe;
-Issue__c        TestFirstIssue     = newissue;
+PricebookEntry  testPricebookEntry = testpbe;
+Issue__c        testFirstIssue     = newissue;
 
-OpportunityLineItem TestOpportunityLineItem = new OpportunityLineItem
+OpportunityLineItem testOpportunityLineItem = new OpportunityLineItem
         (OpportunityID = TestOpportunity.id,
          PriceBookEntryID = testpricebookentry.id,
          Quantity = 1,
@@ -77,38 +76,33 @@ OpportunityLineItem TestOpportunityLineItem = new OpportunityLineItem
          End_Date__c  = date.valueof('2000-02-15')
          );
          
-         insert TestOpportunityLineItem;
+         insert testOpportunityLineItem;
 
 //test that the opportunity exists
 
-List<Opportunity> ResultOpportunity = [select id
+List<Opportunity> resultOpportunity = [select id
                                        from Opportunity
                                        where id = :TestOpportunity.id];
-integer OppCounter = 0;
+integer oppCounter = 0;
 
-for (Opportunity Opps : ResultOpportunity) {
-OppCounter++;
+for (Opportunity opps : resultOpportunity) {
+oppCounter++;
 }
 
 system.debug('xxxxxxxxxxxxxxxxxxxxxxxxxx How Many Opportunities?');
-system.debug(OppCounter);
+system.debug(oppCounter);
 
-System.assertEquals(OppCounter, 1);
+System.assertEquals(oppCounter, 1);
 
 //test that the 2 line items exists
-List<OpportunityLineItem> ResultOpportunityLineItem = [select id
+List<OpportunityLineItem> resultOpportunityLineItem = [select id
                                                         from OpportunityLineItem
                                                         where OpportunityID = :TestOpportunity.id];
-integer LiCounter = 0;
-
-for (OpportunityLineItem OppLI : ResultOpportunityLineItem) {
-LiCounter++;
-}
 
 system.debug('xxxxxxxxxxxxxxxxxxxxxxxxxx How Many LineItems?');
 system.debug(LiCounter);
 
-system.assertEquals(2, liCounter);
+system.assertEquals(2, resultOpportunityLineItem.size());
 
 // tidy up
 
